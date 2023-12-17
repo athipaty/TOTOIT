@@ -7,6 +7,7 @@ const Home = () => {
     { name: "Amornrat", position: "supervisor" },
     { name: "Suwanna", position: "staff" },
     { name: "Sumeena", position: "staff" },
+    { name: "jariya", position: "staff" },
   ]);
 
   return (
