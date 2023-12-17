@@ -5,6 +5,7 @@ const Home = () => {
     { name: "Athipat", position: "leader" },
     { name: "Anuchit", position: "supervisor" },
     { name: "Amornrat", position: "supervisor" },
+    { name: "Suwanna", position: "staff" },
   ]);
 
   return (
