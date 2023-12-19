@@ -7,16 +7,19 @@ const Home = () => {
     { name: "Phakjiran", position: "leader" },
     { name: "Suwanna", position: "staff" },
     { name: "Sumeena", position: "staff" },
-    { name: "jariya", position: "staff" },
   ]);
 
   return (
     <div className="home">
-      {members.map((member) => (
-        <div key={member.name}>
-          <div>{member.name}</div>
-        </div>
-      ))}
+      <div className="home_head">
+        <h2>Your faverite</h2>
+      </div>
+      <div className="home_details">
+        <div>Movie#1</div>
+        <div>Movie#2</div>
+        <div>Movie#3</div>
+        <div>Movie#4</div>
+      </div>
     </div>
   );
 };
