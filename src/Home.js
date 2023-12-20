@@ -8,6 +8,8 @@ const Home = () => {
     { name: "Suwanna", position: "staff" },
     { name: "Sumeena", position: "staff" },
   ]);
+  const result = members.filter((item) => item.name.includes("a"))
+  console.log(result)
 
   return (
     <div className="home">
