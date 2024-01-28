@@ -1,7 +1,13 @@
-export default function Search({handleChange}) {
+export default function Search({handleChange, serchValue}) {
     return (
-        <>
-            <input className="search" type="text" onChange={handleChange} />
-        </>
+        <div className="search">
+            <input 
+            className="search-input" 
+            type="text" 
+            value={serchValue}
+            onChange={handleChange} 
+            placeholder="Search for a movie "
+            />
+        </div>
     )
 }

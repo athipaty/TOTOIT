@@ -1,16 +1,18 @@
-body {
-    padding: 10px;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
-
 .container {
     margin: auto;
+    padding: 10px 15px;
 }
 
 /* ...Header */
 
 .header {
     margin: auto;
-    width: max-content;
     padding: 10px 20px;
     background-color: #e50914;
     border-radius: 5px;
@@ -18,35 +20,95 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 20px;
 }
 
 /* ...Search */
-
 .search {
+    position: relative;
+}
+.search-input {
     display: block;
     margin: 15px auto;
-    border: 1px solid red;
-    padding: 10px;
+    padding: 5px;
     border-radius: 20px;
     text-align: center;   
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+/* ...Search */
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.buttons button {
+    margin: 0 0 10px 0px;
+    padding: 5px 10px;
 }
 
 /* ...Content */
 
 .content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     justify-content: center;
-    align-items: center;
+    align-items: self-start;
+    gap: 10px;
 }
 .content img {
     display: block;
-    width: 200px;
+    width: 100%;
+    margin: 0 auto;
     object-fit: cover;
+    cursor: pointer;
 }
-
+.selected-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 15px;
+}
+.selected-content {
+    background: white;
+    padding: 10px;
+    max-width: 400px;
+    max-height: 100%;
+    overflow: auto;
+    z-index: 1000;
+}
+.selected-content img {
+    width: 80%;
+}
+.selected-content h3, 
+.selected-content p {
+    text-align: center;
+    margin: 5px;
+}
+.selected-content button {
+    padding: 5px 10px;
+    margin: 15px auto 0px auto;
+    display: block;
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.selected-content button:hover {
+    scale: 1.05
+}
+  
+  
 
 

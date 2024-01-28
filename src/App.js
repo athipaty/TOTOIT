@@ -3,12 +3,18 @@ import axios from "axios";
 import Header from "./conponents/Header";
 import Search from "./conponents/Seach";
 import Content from "./conponents/Content";
-import "./App.css";
+import Buttons from "./conponents/Buttons";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
 
   const [serchValue, setSearchValue] = useState("");
+
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const [favoritemovies, setFavoriteMovies] = useState([]);
+
+  const [showFavoriteMovies, setShowFavoriteMovies] = useState(false)
 
   // set seach value base on what user input
   const handleChange = (e) => setSearchValue(e.target.value);
@@ -36,25 +42,76 @@ export default function App() {
       console.log(error);
     }
   };
+  
+  // Show a details of clicked movie when user click each movie
+  const handleDetails = (movie) => setSelectedMovie(movie);
+  
+  // Remove a details of clicked movie when user click wherever
+  const handleCloseDetails = () => setSelectedMovie(null);
+
+  // add the movie to favorite list when user click favorite button
+  const handleFavorite = (movie) => {
+
+    // check if that movie already at favorite list or not
+    const isFavorite = favoritemovies.some((fav) => fav.id === movie.id);
+
+    if (isFavorite) {
+      // if yes, remove movie from favorites
+      setFavoriteMovies((prevFavorites) =>
+        prevFavorites.filter((fav) => fav.id !== movie.id),
+      );
+    } else {
+      // if no, add movie to favorites
+      setFavoriteMovies((prevFavorites) => [...prevFavorites, movie]);
+    }
+  };
+
+  // show favorite list when user click on favorite button
+  const handleShowFavorite = () => {
+    setSearchValue("");
+    setShowFavoriteMovies(true);
+    setMovies(favoritemovies);
+    
+  }
+
+  const handleShowPopular = () => {
+    setSearchValue("");
+    setShowFavoriteMovies(false);
+  }
 
   useEffect(() => {
-
-    // fetch popular movie as default if seach field is emtry
-    if (serchValue === "") {
-      fetchPopularMovie();
-    } 
-    
-    // if search field is not emtry then fetch search movie
-    else {
-      fetchSearchMovie();
+    if (showFavoriteMovies) {
+      setMovies(favoritemovies);
+      
+    } else {
+      // Fetch popular or search movies based on the condition
+      if (serchValue === "") {
+        fetchPopularMovie();
+      } else {
+        fetchSearchMovie();
+      }
     }
-  }, [serchValue]);
+  }, [serchValue, showFavoriteMovies, favoritemovies]);
 
   return (
     <div className="container">
       <Header />
-      <Search handleChange={handleChange} />
-      <Content movies={movies}/>
+      <Search
+      serchValue={serchValue}
+      handleChange={handleChange} 
+      />
+      <Buttons 
+      handleShowFavorite={handleShowFavorite}
+      handleShowPopular={handleShowPopular}
+      />
+      <Content 
+        movies={movies} 
+        selectedMovie={selectedMovie}
+        handleDetails={handleDetails}
+        handleCloseDetails={handleCloseDetails}
+        handleFavorite={handleFavorite}
+        favoritemovies={favoritemovies}
+      />
     </div>
   );
 }
