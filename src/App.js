@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Header from "./conponents/Header";
 import Search from "./conponents/Search";
@@ -8,21 +8,15 @@ import Loading from "./conponents/Loading";
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-
   const [loading, setLoading] = useState(false);
-
   const [serchValue, setSearchValue] = useState("");
-
   const [selectedMovie, setSelectedMovie] = useState(null);
-
   const [favoritemovies, setFavoriteMovies] = useState([]);
-
   const [showFavoriteMovies, setShowFavoriteMovies] = useState(false);
+  const loaderRef = useRef(null);
 
-  // set seach value base on what user input
   const handleChange = (e) => setSearchValue(e.target.value);
 
-  // fetch popular movie as default
   const fetchPopularMovie = async () => {
     try {
       setLoading(true);
@@ -38,62 +32,89 @@ export default function App() {
     }
   };
 
-  // fetch whatever user input
-  const fetchSearchMovie = async (e) => {
+  const fetchSearchMovie = async () => {
     try {
       setLoading(true);
-      const respond = await axios.get(
+      const response = await axios.get(
         `https://api.themoviedb.org/3/search/movie?api_key=c8bebd847d4df8b92eeedfa23986fc0c&query=${serchValue}`
       );
 
-      setMovies(respond.data.results);
+      setMovies(response.data.results);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Show a details of clicked movie when user click each movie
+  const fetchMoreMovies = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/popular?api_key=c8bebd847d4df8b92eeedfa23986fc0c&page=${movies.length / 20 + 1}`
+      );
+
+      setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [movies.length]);
+
   const handleDetails = (movie) => setSelectedMovie(movie);
 
-  // Remove a details of clicked movie when user click wherever
   const handleCloseDetails = () => setSelectedMovie(null);
 
-  // add the movie to favorite list when user click favorite button
   const handleFavorite = (movie) => {
-    // check if that movie already at favorite list or not
     const isFavorite = favoritemovies.some((fav) => fav.id === movie.id);
 
     if (isFavorite) {
-      // if yes, remove movie from favorites
       setFavoriteMovies((prevFavorites) =>
         prevFavorites.filter((fav) => fav.id !== movie.id)
       );
     } else {
-      // if no, add movie to favorites
       setFavoriteMovies((prevFavorites) => [...prevFavorites, movie]);
     }
   };
 
-  // show favorite list when user click on favorite button
   const handleShowFavorite = () => {
     setSearchValue("");
     setShowFavoriteMovies(true);
     setMovies(favoritemovies);
   };
 
-  // show favorite list when user click on favorite button
   const handleShowPopular = () => {
     setSearchValue("");
     setShowFavoriteMovies(false);
   };
 
   useEffect(() => {
+    if (!showFavoriteMovies) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !loading) {
+            fetchMoreMovies();
+          }
+        },
+        { threshold: 1 }
+      );
+
+      if (loaderRef.current) {
+        observer.observe(loaderRef.current);
+      }
+
+      return () => {
+        if (loaderRef.current) {
+          observer.unobserve(loaderRef.current);
+        }
+      };
+    }
+  }, [fetchMoreMovies, loading, showFavoriteMovies]);
+  useEffect(() => {
     if (showFavoriteMovies) {
       setMovies(favoritemovies);
     } else {
-      // Fetch popular or search movies based on the condition
       if (serchValue === "") {
         fetchPopularMovie();
       } else {
@@ -122,6 +143,7 @@ export default function App() {
           favoritemovies={favoritemovies}
         />
       )}
+      <div ref={loaderRef}></div>
     </div>
   );
 }
