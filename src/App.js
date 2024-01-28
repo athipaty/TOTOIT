@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "./conponents/Header";
-import Search from "./conponents/Seach";
+import Search from "./conponents/Search";
 import Content from "./conponents/Content";
 import Buttons from "./conponents/Buttons";
 import Loading from "./conponents/Loading";
