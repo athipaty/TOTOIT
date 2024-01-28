@@ -24,6 +24,7 @@ export default function Content({ movies, handleDetails, selectedMovie, handleCl
                 alt=""
               />
               <h3>{selectedMovie.title}</h3>
+              <p>{selectedMovie.release_date}</p>
             </div>
             <p>{selectedMovie.overview}</p>
             <button onClick={() => handleFavorite(selectedMovie)} >
