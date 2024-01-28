@@ -35,7 +35,7 @@ To run the Movie Database App locally, follow these steps:
 git clone https://github.com/athipaty/TOTOIT.git
 
 # Navigate to the project directory
-cd react
+cd TOTOIT
 
 # Install dependencies
 npm install
